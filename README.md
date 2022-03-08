@@ -13,13 +13,13 @@ You can download H2o from here: https://www.h2o.ai/resources/download/
 You can download Java from here: https://www.java.com/en/
 
 Alternatively, you can run the following commands on your terminal
-'''
+```
 $ curl -o h2o.zip http://download.h2o.ai/versions/h2o-3.30.0.6.zip
 $ cd ~/Downloads
 $ unzip h2o-3.30.0.6.zip
 $ cd h2o-3.30.0.6
 $ java -jar h2o.jar
-'''
+```
 
 Note: that either way you need to have java. 
 Then, you download the tutorial and import it when you open H2oFlow Notebook. 
@@ -38,7 +38,7 @@ H2o offers an R package that can be installed from CRAN, and a python package th
  a standard supervised prediction model.
 
 ### set up
-'''
+```
 $ library(h2o)
 $ h2o.init(nthreads = -1, #Number of threads -1 means use all cores on your machine
 $         max_mem_size = "8G")  #max mem size is the maximum memory to allocate to H2O
@@ -57,7 +57,7 @@ $ test <- splits[[3]]
 
 $ y <- "bad_loan"
 $ x <- setdiff(names(data), c(y, "int_rate"))  #remove the interest rate column because it's correlated with the outcome
-'''
+```
 
 
  ### Train a default DL
@@ -67,13 +67,13 @@ $ x <- setdiff(names(data), c(y, "int_rate"))  #remove the interest rate column 
  In H2O's DL, early stopping is enabled by default, so below, it will use the training set and 
  default stopping parameters to perform early stopping.
 
-'''
+```
 $ dl_fit1 <- h2o.deeplearning(x = x,
 $                            y = y,
 $                            training_frame = train,
 $                            model_id = "dl_fit1",
 $                            seed = 1)
-'''
+```
 
  Train a DL with new architecture and more epochs.
  Next we will increase the number of epochs used in the GBM by setting `epochs=20` (the default is 10).  
@@ -83,7 +83,7 @@ $                            seed = 1)
  use early stopping by default, so for comparison we will first turn off early stopping.  We do this in the next example 
  by setting `stopping_rounds=0`.
 
-'''
+```
 $ dl_fit2 <- h2o.deeplearning(x = x,
                             y = y,
                             training_frame = train,
@@ -93,14 +93,14 @@ $ dl_fit2 <- h2o.deeplearning(x = x,
                             hidden= c(10,10),
                             stopping_rounds = 0,  # disable early stopping
                             seed = 1)
-'''
+```
 
  Train a DL with early stopping
  This example will use the same model parameters as `dl_fit2`. This time, we will turn on 
  early stopping and specify the stopping criterion.  We will also pass a validation set, as is
  recommended for early stopping.
 
-'''
+```
 $ dl_fit3 <- h2o.deeplearning(x = x,
                             y = y,
                             training_frame = train,
@@ -113,42 +113,41 @@ $ dl_fit3 <- h2o.deeplearning(x = x,
                             stopping_metric = "AUC",      #used for early stopping
                             stopping_tolerance = 0.0005,  #used for early stopping
                             seed = 1)
-'''
+```
 
 Let's compare the performance of the three DL models
 
-'''
+```
 $ dl_perf1 <- h2o.performance(model = dl_fit1,
                             newdata = test)
 $ dl_perf2 <- h2o.performance(model = dl_fit2,
                             newdata = test)
 $ dl_perf3 <- h2o.performance(model = dl_fit3,
                             newdata = test)
-'''
+```
 
 Print model performance
-'''
+```
 $ dl_perf1
 $ dl_perf2
 $ dl_perf3
-'''
+```
 Retreive test set AUC
 
-'''
+```
 $ h2o.auc(dl_perf1)  # 0.6774335
 $ h2o.auc(dl_perf2)  # 0.678446
 $ h2o.auc(dl_perf3)  # 0.6770498
-'''
+```
 Scoring history
-'''
+```
 $ h2o.scoreHistory(dl_fit3)
-'''
+```
 Look at scoring history for third DL model
-'''
+```
 $ plot(dl_fit3, 
      timestep = "epochs", 
      metric = "AUC")
-
-'''
+```
 
 
