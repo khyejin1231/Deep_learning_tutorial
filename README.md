@@ -97,8 +97,11 @@ H2o offers an R package that can be installed from CRAN, and a python package th
  early stopping and specify the stopping criterion.  We will also pass a validation set, as is
  recommended for early stopping.
  `score_interval`: Specify the shortest time interval (in seconds) to wait between model scoring. This option defaults to 5.
+ 
  `stopping_rounds`: Stops training when the option selected for `stopping_metric` does not improve for the specified number of training rounds, based on a simple moving average. To disable this feature, specify `0`. The metric is computed on the validation data (if provided); otherwise; training data is used. The deafult is 5.
+ 
  `stopping_metric`: Specify the metric to use for early stopping. Options are elaborated here: https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/stopping_metric.html
+ 
  `stopping_tolerence`: Specify the relative tolerance fir tge netric-based stopping to stop training if the improvement is less than this value. This option defaults to 0. These stopping options are used to increase performance by restricting the number of models that get built. 
  https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/stopping_tolerance.html
 
