@@ -25,6 +25,7 @@ Note: that either way you need to have java.
 Then, you download the tutorial and import it when you open H2oFlow Notebook. 
 
 ## Tutorial 3. 
+This tutorial shows how a H2o deep learning model can be used to do supervised classification and regression. We will use R.  H2O's Deep Learning algorithm is a multilayer feed-forward artificial neural network. It can also be used to train an autoencoder. In this example we will train a standard supervised prediction model.
 
 ### How to use H2o in R?
 There are some useful links that you can read: 
@@ -32,10 +33,6 @@ https://docs.h2o.ai/h2o/latest-stable/h2o-r/docs/reference/index.html
 https://docs.h2o.ai/h2o-tutorials/latest-stable/H2OTutorialsBook.pdf
 
 H2o offers an R package that can be installed from CRAN, and a python package that can be installed from PyPI. Or, it can be downloaded from here: http://h2o.ai/download.
-
- H2O's Deep Learning algorithm is a multilayer feed-forward artificial neural network.  
- It can also be used to train an autoencoder. In this example we will train 
- a standard supervised prediction model.
 
 ### set up
 ```
@@ -150,4 +147,6 @@ $ plot(dl_fit3,
      metric = "AUC")
 ```
 
+## Sources
+This app is inspired by Michal Kurka [@michalkurka](https://github.com/h2oai/h2o-tutorials/blob/master/h2o-open-tour-2016/chicago/intro-to-h2o.R)
 
