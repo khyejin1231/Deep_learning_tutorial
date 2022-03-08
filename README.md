@@ -37,6 +37,7 @@ H2o offers an R package that can be installed from CRAN, and a python package th
 
 ### set up
 ```
+
  library(h2o)
  h2o.init(nthreads = -1, #Number of threads -1 means use all cores on your machine
          max_mem_size = "8G")  #max mem size is the maximum memory to allocate to H2O
