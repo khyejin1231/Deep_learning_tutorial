@@ -22,6 +22,7 @@ $ java -jar h2o.jar
 ```
 
 Note: that either way you need to have java. 
+
 Then, you download the tutorial and import it when you open H2oFlow Notebook. 
 
 ## Tutorial 3. 
@@ -73,12 +74,11 @@ H2o offers an R package that can be installed from CRAN, and a python package th
 ```
 
  Train a DL with new architecture and more epochs.
- Next we will increase the number of epochs used in the GBM by setting `epochs=20` (the default is 10).  
+ Next we will increase the number of epochs by setting `epochs=20` (the default is 10).  
  Increasing the number of epochs in a deep neural net may increase performance of the model, however, 
- you have to be careful not to overfit your model to your training data.  To automatically find the optimal number of epochs, 
- you must use H2O's early stopping functionality.  Unlike the rest of the H2O algorithms, H2O's DL will 
- use early stopping by default, so for comparison we will first turn off early stopping.  We do this in the next example 
- by setting `stopping_rounds=0`.
+ you have to be careful not to overfit your model to your training data.  To automatically find the optimal number of epochs, you must use H2O's early stopping functionality (`stopping_rounds`).  Unlike the rest of the H2O algorithms, H2O's DL will use early stopping by default, so for comparison we will first turn off early stopping.  We do this in the next example  by setting `stopping_rounds=0`.
+
+`epochs`: Specify the number of times to iterate the dataset. The value can be a fraction. This option defaults to 10. 
 
 ```
  dl_fit2 <- h2o.deeplearning(x = x,
@@ -96,6 +96,11 @@ H2o offers an R package that can be installed from CRAN, and a python package th
  This example will use the same model parameters as `dl_fit2`. This time, we will turn on 
  early stopping and specify the stopping criterion.  We will also pass a validation set, as is
  recommended for early stopping.
+ `score_interval`: Specify the shortest time interval (in seconds) to wait between model scoring. This option defaults to 5.
+ `stopping_rounds`: Stops training when the option selected for `stopping_metric` does not improve for the specified number of training rounds, based on a simple moving average. To disable this feature, specify `0`. The metric is computed on the validation data (if provided); otherwise; training data is used. The deafult is 5.
+ `stopping_metric`: Specify the metric to use for early stopping. Options are elaborated here: https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/stopping_metric.html
+ `stopping_tolerence`: Specify the relative tolerance fir tge netric-based stopping to stop training if the improvement is less than this value. This option defaults to 0. These stopping options are used to increase performance by restricting the number of models that get built. 
+ https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/algo-params/stopping_tolerance.html
 
 ```
  dl_fit3 <- h2o.deeplearning(x = x,
