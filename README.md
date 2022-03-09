@@ -9,8 +9,8 @@ This is a PhD level course on Deep Learning. For tutorials, we learn practical s
 ## Tutorial 2.
 For tutorial 2, we discuss H2o Flow. A basic introduction to H2o flow is covered in the following file: tutorial2 (1).Flow.
 In order to run H2o Flow, you need to have the followings on your computer. 1) H2o application 2) Java
-You can download H2o from [@here] (https://www.h2o.ai/resources/download/)
-You can download Java from [@here] (https://www.java.com/en/)
+You can download H2o from [here] (https://www.h2o.ai/resources/download/)
+You can download Java from [here] (https://www.java.com/en/)
 
 Alternatively, you can run the following commands on your terminal
 ```
