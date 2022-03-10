@@ -20,6 +20,7 @@ $ unzip h2o-3.30.0.6.zip
 $ cd h2o-3.30.0.6
 $ java -jar h2o.jar
 ```
+Finally, please click here to open Flow: http://localhost:54321/
 
 Note: that either way you need to have java. 
 
