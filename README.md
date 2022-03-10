@@ -158,5 +158,5 @@ Look at scoring history for third DL model
 ```
 
 ## Sources
-This app is inspired by Michal Kurka [@michalkurka](https://github.com/h2oai/h2o-tutorials/blob/master/h2o-open-tour-2016/chicago/intro-to-h2o.R)
+This is inspired by Michal Kurka [@michalkurka](https://github.com/h2oai/h2o-tutorials/blob/master/h2o-open-tour-2016/chicago/intro-to-h2o.R)
 
