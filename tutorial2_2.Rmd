@@ -1,0 +1,225 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Advanced Deep learning tutorial - H2o 
+
+R installation instructions are at http://h2o.ai/download
+For a full tutorial on h2o, please go see [Link] (https://docs.h2o.ai/h2o-tutorials/latest-stable/H2OTutorialsBook.pdf)
+
+```{r}
+library(h2o)
+```
+
+## Start H2o
+Start up a 1-node H2o server on your local machine, and allow it to use all CPU cores and up to 2-8GB of memory:
+```{r}
+h2o.init(nthreads = -1, max_mem_size = "8G")
+h2o.removeAll() ## clean slate - just in case the cluster was already running
+```
+
+If you would like to explore Deep Learning you can use the following commands
+`args(h2o.deeplearning)`, `help(h2o.deeplearning)`, `example(h2o.deeplearning)`.
+
+For this tutorial, we will use CoverType Dataset. This can be found in the following [Link] (https://docs.h2o.ai/h2o-tutorials/latest-stable/tutorials/data/).
+
+What is this data?
+The original ForestCover/Covertype dataset from UCI machine learning repository is a multiclass classification dataset. It is used in predicting forest cover type from cartographic variables only (no remotely sensed data).
+
+
+```{r}
+df <- h2o.importFile(path=normalizePath("../Deeplearning/covtype.full.csv"))
+dim(df)
+df
+splits <- h2o.splitFrame(df, c(0.6,0.2), seed = 1234)
+train <- h2o.assign(splits[[1]], "train.hex")
+valid <- h2o.assign(splits[[2]], "valid.hex")
+test <- h2o.assign(splits[[3]], "test.hex")
+
+```
+
+```{r}
+response <- "Cover_Type"
+predictors <- setdiff(names(df), response)
+predictors
+```
+
+## First run of H2o deep learning
+We have learned how to build basic DL model.
+To keep it fast, lets use epoch = 2 or 1
+```{r}
+m1 <- h2o.deeplearning(
+model_id="dl_model_first",
+training_frame=train,
+validation_frame=valid, ## validation dataset: used for scoring and early stopping
+x=predictors,
+y=response,
+#activation="Rectifier", ## default
+#hidden=c(200,200), ## default: 2 hidden layers with 200 neurons each
+epochs=1,
+variable_importances=T ## not enabled by default
+)
+summary(m1)
+```
+
+## Variable Importances
+How do we check variable importances for DL? 
+Be aware that variable importances for DL is complex and you should be aware of 
+potential pitfalls. Further information can be found here: https://arxiv.org/pdf/1901.09839.pdf
+
+```{r}
+head(as.data.frame(h2o.varimp(m1)))
+```
+
+## Adaptive Learning Rate
+By default, H2O Deep learning uses an adaptive learning rate (ADADELTA) for
+its stochastic gradient descent optimization. There are oly two tuning parameters
+for this model: `rho` and `epsilon`. `rho` is the similarity to prior weight 
+updates (similar to momentum), and `epsilon` is a parametter that prevents the
+optimization to get stuck in local optima. 
+
+## Hyper-parameter Tuning with Gridsearch
+As we know, there are a lot of parameters that can impact model accuracy.
+
+For speed, we will only train on the first 10,000 rows of the training dataset.
+```{r}
+sampled_train = train[1:10000,]
+```
+
+first we need to set our grid.
+```{r}
+hyper_params <- list(
+hidden=list(c(32,32,32),c(64,64)),
+input_dropout_ratio=c(0,0.05),
+rate=c(0.01,0.02),
+rate_annealing=c(1e-8,1e-7,1e-6)
+)
+hyper_params
+
+```
+
+```{r}
+grid <- h2o.grid(
+algorithm="deeplearning",
+grid_id="dl_grid",
+training_frame=sampled_train,
+validation_frame=valid,
+x=predictors,
+y=response,
+epochs=10,
+stopping_metric="misclassification",
+stopping_tolerance=1e-2, ## stop when misclassification does not improve by >=1% for 2 scoring events
+stopping_rounds=2,
+score_validation_samples=10000, ## downsample validation set for faster scoring
+score_duty_cycle=0.025, ## don't score more than 2.5% of the wall time
+adaptive_rate=F, ## manually tuned learning rate
+momentum_start=0.5, ## manually tuned momentum
+momentum_stable=0.9,
+momentum_ramp=1e7,
+l1=1e-5,
+l2=1e-5,
+activation=c("Rectifier"),
+max_w2=10, ## can help improve stability for Rectifier
+hyper_params=hyper_params
+)
+grid
+
+
+
+```
+
+Now, let's see which model had the lowest validation error:
+```{r}
+grid <- h2o.getGrid("dl_grid",sort_by="err",decreasing=FALSE)
+grid
+
+## To see what other "sort_by" criteria are allowed
+#grid <- h2o.getGrid("dl_grid",sort_by="wrong_thing",decreasing=FALSE)
+
+## Sort by logloss
+h2o.getGrid("dl_grid",sort_by="logloss",decreasing=FALSE)
+
+## Find the best model and its full set of parameters
+grid@summary_table[1,]
+best_model <- h2o.getModel(grid@model_ids[[1]])
+best_model
+print(best_model@allparameters)
+print(h2o.performance(best_model, valid=T))
+print(h2o.logloss(best_model, valid=T))
+```
+
+## Random Hyper-Parameter Search
+Often, hyper-parameter search for more than 4 parameters can be done more 
+efficiently with random parameter search than with grid search.
+Please read:
+https://eranraviv.com/hyper-parameter-optimization-using-random-search/
+
+We simply build up to `max_models` models with parameters drawn randomly from 
+user-specific distributions. For this example, we use the adaptive learning
+rate and focus on tuning the network architecture and the regularization 
+parameters. We also let he grid search stop automatically once the performance
+at the top of the leaderboard doesn't change much anymore (i.e., convergence).
+
+```{r}
+hyper_params <- list(
+activation=c("Rectifier","Tanh","Maxout","RectifierWithDropout","TanhWithDropout","MaxoutWithDropout"),
+hidden=list(c(20,20),c(50,50),c(30,30,30),c(25,25,25,25)),
+input_dropout_ratio=c(0,0.05),
+l1=seq(0,1e-4,1e-6),
+l2=seq(0,1e-4,1e-6)
+)
+hyper_params
+
+
+## Stop once the top 5 models are within 1% of each other (i.e., the windowed average varies less than 1%)
+search_criteria = list(strategy = "RandomDiscrete", max_runtime_secs = 360, max_models = 100, seed=1234567, stopping_rounds=5, stopping_tolerance= 1e-2)
+
+dl_random_grid <- h2o.grid(
+algorithm="deeplearning",
+grid_id = "dl_grid_random",
+training_frame=sampled_train,
+validation_frame=valid,
+x=predictors,
+y=response,
+epochs=1,
+stopping_metric="logloss",
+stopping_tolerance=1e-2, ## stop when logloss does not improve by >=1% for 2 scoring events
+stopping_rounds=2,
+score_validation_samples=10000, ## downsample validation set for faster scoring
+score_duty_cycle=0.025, ## don't score more than 2.5% of the wall time
+max_w2=10, ## can help improve stability for Rectifier
+hyper_params = hyper_params,
+search_criteria = search_criteria
+)
+
+grid <- h2o.getGrid("dl_grid_random",sort_by="logloss",decreasing=FALSE)
+grid
+
+grid@summary_table[1,]
+
+best_model <- h2o.getModel(grid@model_ids[[1]]) ## model with lowest logloss
+best_model
+```
+
+Let's look at the model with the lowest validation misclassification rate:
+
+```{r}
+grid <- h2o.getGrid("dl_grid",sort_by="err",decreasing=FALSE)
+best_model <- h2o.getModel(grid@model_ids[[1]]) ## model with lowest classification error (on validation, since it was available during training)
+h2o.confusionMatrix(best_model,valid=T)
+best_params <- best_model@allparameters
+best_params$activation
+best_params$hidden
+best_params$input_dropout_ratio
+best_params$l1
+best_params$l2
+
+
+```
+
+
+
+
+
+
