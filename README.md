@@ -156,7 +156,12 @@ Look at scoring history for third DL model
      timestep = "epochs", 
      metric = "AUC")
 ```
+Now let's go look at tutrial2_2 document. Pdf file is knitted version of tutorial2_2.Rmd. If you are interested you can run the R markdown file. If your computer does not have enough memory/space, please read the Pdf. 
 
 ## Sources
 This is inspired by Michal Kurka [@michalkurka](https://github.com/h2oai/h2o-tutorials/blob/master/h2o-open-tour-2016/chicago/intro-to-h2o.R)
 
+## Tutorial 4.
+In this tutorial, we would like to explore tensorflow in python.
+Firstly, here are some resources on TensorFlow: https://www.tensorflow.org/overview
+Why should we use tensorFlow?
