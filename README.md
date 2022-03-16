@@ -4,7 +4,7 @@ This is a PhD level course on Deep Learning. For tutorials, we learn practical s
 ## Table of contents
 * [Tutorial2](#Tutorial2)
 * [Tutorial3](#Tutorial3)
-* 
+* [Tutorial4](#Tutorial4)
 
 ## Tutorial 2.
 For tutorial 2, we discuss H2o Flow. A basic introduction to H2o flow is covered in the following file: tutorial2 (1).Flow.
@@ -163,5 +163,33 @@ This is inspired by Michal Kurka [@michalkurka](https://github.com/h2oai/h2o-tut
 
 ## Tutorial 4.
 In this tutorial, we would like to explore tensorflow in python.
-Firstly, here are some resources on TensorFlow: https://www.tensorflow.org/overview
 Why should we use tensorFlow?
+TnesorFlow makes it easy for beginners and experts to create machine learning models for desktop, mobile, web and cloud. It provides a collection of workflows to develop and train models using Python or JavaScript, and to easily deploy in the cloud, on-prem, in the browser, or on-device no matter what lanaguage you use.
+
+### resources
+Firstly, here are some resources on TensorFlow: https://www.tensorflow.org/overview
+Guide to TensorFlow: https://www.tensorflow.org/guide
+
+### installation
+To install python, please look at this doc. (https://www.tensorflow.org/install)
+There are three ways to install TensorFlow.
+* Download a package. (https://www.tensorflow.org/install/pip)
+```
+# Requires the latest pip
+$ pip install --upgrade pip
+
+#current stable release for CPU and GPU
+$ pip install tensorflow
+```
+* Run a TensorFlow container (https://www.tensorflow.org/install/docker)
+```
+$ docker pull tensorflow/tensorflow:latest  # Download latest stable image
+$ docker run -it -p 8888:8888 tensorflow/tensorflow:latest-jupyter  # Start Jupyter server 
+```
+
+* Google collab
+This option does not require installation. 
+
+### Basic model
+
+
