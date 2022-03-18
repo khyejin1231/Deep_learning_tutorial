@@ -190,6 +190,32 @@ $ docker run -it -p 8888:8888 tensorflow/tensorflow:latest-jupyter  # Start Jupy
 * Google collab
 This option does not require installation. 
 
-### Basic model
+### Basic model (source: https://www.tensorflow.org/tutorials/quickstart/beginner)
 
+#### Set up TensorFlow
+```
+import tensorflow as tf
+print("TensorFlow version:", tf.__version__)
+```
 
+#### Load a dataset: MNIST
+We will convert the sample data from integers to floating-point numbers:
+```
+mnist = tf.keras.datasets.mnist
+
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+x_train, x_test = x_train / 255.0, x_test / 255.0
+```
+
+#### Build a machine learning model
+Build a tf.keras.Sequential model by stacking layers.
+```
+model = tf.keras.models.Sequential([
+  tf.keras.layers.Flatten(input_shape=(28, 28)),
+  tf.keras.layers.Dense(128, activation='relu'),
+  tf.keras.layers.Dropout(0.2),
+  tf.keras.layers.Dense(10)
+])
+```
+
+#### B
