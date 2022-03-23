@@ -218,4 +218,4 @@ model = tf.keras.models.Sequential([
 ])
 ```
 
-### We will discuss similar topics in tutorial 4. For more details, please go to tutorial4 files in the main branch.
+We will discuss similar topics in tutorial 4. For more details, please go to tutorial4 files in the main branch.
