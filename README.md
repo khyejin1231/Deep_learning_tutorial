@@ -5,6 +5,7 @@ This is a PhD level course on Deep Learning. For tutorials, we learn practical s
 * [Tutorial2](#Tutorial2)
 * [Tutorial3](#Tutorial3)
 * [Tutorial4](#Tutorial4)
+* [Tutorial5](#Tutorial5)
 
 ## Tutorial 2.
 For tutorial 2, we discuss H2o Flow. A basic introduction to H2o flow is covered in the following file: tutorial2 (1).Flow.
@@ -219,3 +220,7 @@ model = tf.keras.models.Sequential([
 ```
 
 We will discuss similar topics in tutorial 4. For more details, please go to tutorial4 files in the main branch.
+
+## Tutorial 5.
+For this tutorial, 
+we will discuss GANs model in python. Please read the relevant files in the main folder. 
