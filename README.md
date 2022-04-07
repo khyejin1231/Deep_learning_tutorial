@@ -222,5 +222,7 @@ model = tf.keras.models.Sequential([
 We will discuss similar topics in tutorial 4. For more details, please go to tutorial4 files in the main branch.
 
 ## Tutorial 5.
+
 For this tutorial, 
 we will discuss GANs model in python. Please read the relevant files in the main folder. 
+Generative Adversarial Networks tutorial by Ian Goodfellow
