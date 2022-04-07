@@ -226,3 +226,4 @@ We will discuss similar topics in tutorial 4. For more details, please go to tut
 For this tutorial, 
 we will discuss GANs model in python. Please read the relevant files in the main folder. 
 Generative Adversarial Networks tutorial by Ian Goodfellow
+Also, if you would like to have more resources on deep learning, here is a useful resource provided by MIT: http://introtodeeplearning.com/
